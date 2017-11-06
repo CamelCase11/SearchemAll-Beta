@@ -5,9 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.container_layout.*
-import java.io.File
-import java.net.URL
-import java.net.URLConnection
 
 // TODO add code to store that in cache and parse it
 // TODO file url handling
@@ -22,22 +19,11 @@ class MainActivity : AppCompatActivity() {
         nestedScrollView.isFillViewport = true
 
         initSpinner()
-        downloadUrlFile()
+        val fileDownloadTask = FileDownloadTask(this)
         perform_search.setOnClickListener {
             appbar.setExpanded(false)
+            fileDownloadTask.start()
             replaceFragment()
-        }
-    }
-
-    private fun downloadUrlFile() {
-        val file:File = File(filesDir,"search_urls")
-        if(!file.exists()) {
-            val cn:URLConnection =
-                    URL("https://github.com/CamelCase11/SearchEnginesUrls/blob/master/unified_search_urls")
-                            .openConnection()
-            cn.connect()
-            val inputstream = cn.getInputStream()
-            // TODO save inputstream to file
         }
     }
 
