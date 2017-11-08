@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.container_layout.*
+import java.io.File
 
 // TODO add code to store that in cache and parse it
 // TODO file url handling
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.container_layout.*
 
 class MainActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,10 +22,20 @@ class MainActivity : AppCompatActivity() {
 
         initSpinner()
         val fileDownloadTask = FileDownloadTask(this)
+        val filename = getString(R.string.search_scopes_file_name)
+
         perform_search.setOnClickListener {
             appbar.setExpanded(false)
             fileDownloadTask.start()
-            replaceFragment()
+            val file = File(externalCacheDir, filename)
+            val fileToString = file.inputStream().bufferedReader().use { it.readText() }
+//            print(fileToString)
+            val myJsonHandler = MyJsonHandler(fileToString)
+            val searchArray = myJsonHandler.getSearchList("web")
+            for (i in searchArray) {
+                print("name : ${i.name}, url : ${i.url}, enableJs : ${i.enableJs}")
+            }
+            //            replaceFragment()
         }
     }
 
