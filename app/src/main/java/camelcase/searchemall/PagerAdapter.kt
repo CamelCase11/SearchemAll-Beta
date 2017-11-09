@@ -11,6 +11,7 @@ class PagerAdapter(fm: FragmentManager?, pageArray: ArrayList<SearchEngineProper
     override fun getItem(position: Int): Fragment {
         val fragment = FragmentTest()
         fragment.url = pageData[position].url
+        fragment.enableJs = pageData[position].enableJs
         return fragment
     }
 

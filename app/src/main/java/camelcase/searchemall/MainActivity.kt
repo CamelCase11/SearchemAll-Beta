@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.container_layout.*
 import java.io.File
 
-// TODO add code to store that in cache and parse it
 // TODO file url handling
 // TODO fullscreen video support
 // TODO Proper UI implementation
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
         val viewpagerFragment = FragmentViewPager()
-        viewpagerFragment.pageData = webSearchArray
+        viewpagerFragment.pageData = torrentSearchArray
         ft.replace(R.id.container,viewpagerFragment)
         ft.commit()
     }
