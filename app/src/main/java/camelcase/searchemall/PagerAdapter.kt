@@ -4,17 +4,21 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 
-class PagerAdapter(fm:FragmentManager?) : FragmentStatePagerAdapter(fm){
+class PagerAdapter(fm: FragmentManager?, pageArray: ArrayList<SearchEngineProperties>) : FragmentStatePagerAdapter(fm) {
+
+    private val pageData = pageArray
 
     override fun getItem(position: Int): Fragment {
-        return FragmentTest()
+        val fragment = FragmentTest()
+        fragment.url = pageData[position].url
+        return fragment
     }
 
     override fun getCount(): Int {
-        return 5
+        return pageData.size
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return "TAB"
+        return pageData[position].name
     }
 }
