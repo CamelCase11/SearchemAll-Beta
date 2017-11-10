@@ -14,9 +14,6 @@ class FileDownloadTask(context:Context) : Thread() {
         val cn = URL(mycontext.getString(R.string.search_scopes_url)).openConnection()
         cn.connect()
         val file = File(mycontext.externalCacheDir,FILE_NAME)
-
-        if(!file.exists()) {
-            file.writeBytes(cn.getInputStream().readBytes())
-        }
+        file.writeBytes(cn.getInputStream().readBytes())
     }
 }
