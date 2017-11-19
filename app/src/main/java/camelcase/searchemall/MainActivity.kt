@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.container_layout.*
+
 import java.io.File
 
 // TODO file url handling
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         nestedScrollView.isFillViewport = true
 
         initSpinner()
-
         val fileDownloadTask = FileDownloadTask(this)
         fileDownloadTask.start() // downloads a file if does not exists.
         val file = initFile()
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                     this,
-                    "Can not download url file, chek your network",
+                    "Can not download url file, check your network",
                     Toast.LENGTH_SHORT
             ).show()
         }
@@ -71,9 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // get file as a string. Useful for files with text inside.
-    private fun getFileString(file: File): String {
-        return file.inputStream().bufferedReader().use { it.readText() }
-    }
+    private fun getFileString(file: File): String = file.inputStream().bufferedReader().use { it.readText() }
 
     // Initialize file in internal storage/Android/data/package/cache directory
     private fun initFile(): File {
@@ -87,9 +85,9 @@ class MainActivity : AppCompatActivity() {
              * check for valid text entry and perform search
              */
             val typedQuery = search_query.text.toString()
-            if (typedQuery.trim() == "") {
-                Toast.makeText(this, "Please Enter a valid Query", Toast.LENGTH_SHORT).show()
-            } else {
+            if (typedQuery.trim() == "")
+                Toast.makeText(baseContext, "Please Enter a valid Query", Toast.LENGTH_SHORT).show()
+            else {
                 appbar.setExpanded(false)
                 val searchArray = jsonHandler?.getSearchList(selectedScope, typedQuery)
                 replaceFragment(searchArray)
