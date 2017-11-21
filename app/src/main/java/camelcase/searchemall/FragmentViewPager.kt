@@ -17,4 +17,6 @@ class FragmentViewPager : Fragment() {
         view.tabLayout.setupWithViewPager(view.viewpager)
         return view
     }
+
+    fun getPagerAdapter(): PagerAdapter = PagerAdapter(fragmentManager, pageData)
 }

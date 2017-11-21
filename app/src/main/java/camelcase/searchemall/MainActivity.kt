@@ -8,18 +8,17 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.container_layout.*
-
 import java.io.File
 
 // TODO file url handling
 // TODO fullscreen video support
 // TODO Proper UI implementation
-// TODO check file for md5
 
 class MainActivity : AppCompatActivity() {
 
     private val scopeArray = arrayOf("web", "images", "videos", "torrents", "books")
     private var selectedScope: String? = null
+    private var viewpagerFragment: FragmentViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +29,9 @@ class MainActivity : AppCompatActivity() {
         val fileDownloadTask = FileDownloadTask(this)
         fileDownloadTask.start() // downloads a file if does not exists.
         val file = initFile()
-        var myJsonHandler: MyJsonHandler? = null
         if (file.exists()) {
             val fileToString = getFileString(file)
-            myJsonHandler = MyJsonHandler(fileToString)
+            val myJsonHandler = MyJsonHandler(fileToString)
             perform_search.setOnClickListener(bindOnClickListener(myJsonHandler))
         } else {
             Toast.makeText(
@@ -64,8 +62,8 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(arrayList: ArrayList<SearchEngineProperties>?) {
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        val viewpagerFragment = FragmentViewPager()
-        viewpagerFragment.pageData = arrayList
+        viewpagerFragment = FragmentViewPager()
+        viewpagerFragment?.pageData = arrayList
         ft.replace(R.id.container,viewpagerFragment)
         ft.commit()
     }
@@ -79,19 +77,32 @@ class MainActivity : AppCompatActivity() {
         return File(externalCacheDir, filename)
     }
 
+    // onclick listener for search button
     private fun bindOnClickListener(jsonHandler: MyJsonHandler?): View.OnClickListener {
         return View.OnClickListener {
             /**
              * check for valid text entry and perform search
              */
-            val typedQuery = search_query.text.toString()
-            if (typedQuery.trim() == "")
+            val typedQuery = search_query.text.toString().trim()
+            if (typedQuery == "")
                 Toast.makeText(baseContext, "Please Enter a valid Query", Toast.LENGTH_SHORT).show()
             else {
                 appbar.setExpanded(false)
                 val searchArray = jsonHandler?.getSearchList(selectedScope, typedQuery)
                 replaceFragment(searchArray)
             }
+        }
+    }
+
+    // not working
+    override fun onBackPressed() {
+        val pagerAdapter = viewpagerFragment?.getPagerAdapter()
+        val webViewFrag = pagerAdapter?.getItem(pagerAdapter.currentItemNumber) as FragmentWebview
+        val webView = webViewFrag.getWebView()
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
         }
     }
 }
